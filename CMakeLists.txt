@@ -3,15 +3,11 @@ project(PartyThread)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(include)
-add_executable(PartyThreadsExample examples/PartyThreadsExample.cpp)
+add_executable(PartyThreadsExample examples/PartyThreadsExample.cpp include/PartyThreads.h)
 
 #
 #   Google Test
 #
-set(UNIT_TEST PartyThreadsUnitTest)
-add_executable(${UNIT_TEST} ${CMAKE_CURRENT_SOURCE_DIR}/tests/PartyThreadsTest.cpp)
-
 include(FetchContent)
 option(BUILD_GMOCK "Build Google test's GMock?" OFF)
 option(INSTALL_GMOCK "Install Google test's GMock?" OFF)
@@ -30,11 +26,16 @@ if(NOT googletest_POPULATED)
     add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+#
+#   Unit Test
+#
+set(UNIT_TEST PartyThreadsUnitTest)
+add_executable(${UNIT_TEST} tests/PartyThreadsTest.cpp include/PartyThreads.h)
+
 target_link_libraries(${UNIT_TEST}
         PRIVATE
         gtest
         gtest_main)
-
 
 # Add a custom target that runs the test application
 # BEWARE: it fails if the test fails
@@ -44,3 +45,21 @@ add_custom_target(RunTest
         WORKING_DIRECTORY ${QX_RUNTIME_OUTDIR}
         COMMENT "Running test application..."
         VERBATIM)
+
+#
+#   Unit Test as library
+#
+
+add_library(${UNIT_TEST}Lib STATIC 
+        tests/AsLibrary/PartyThreadsLibrary.cpp
+        tests/AsLibrary/PartyThreadsLibrary.h
+        include/PartyThreads.h)
+
+set(UNIT_TEST_LIBRARY PartyThreadsUnitTestLibrary)
+add_executable(${UNIT_TEST_LIBRARY} tests/PartyThreadsLibraryTest.cpp tests/AsLibrary/PartyThreadsLibrary.h)
+
+target_link_libraries(${UNIT_TEST_LIBRARY}
+        PRIVATE
+        ${UNIT_TEST}Lib
+        gtest
+        gtest_main)

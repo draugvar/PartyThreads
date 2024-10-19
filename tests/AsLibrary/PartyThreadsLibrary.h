@@ -1,5 +1,5 @@
 /*
- *  PartyThreadsExample.cpp
+ *  PartyThreadsLibrary.h
  *  PartyThreads
  *
  *  Copyright (c) 2019 Salvatore Rivieccio. All rights reserved.
@@ -22,28 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+#pragma once 
 
-#include <iostream>
-#include "../include/PartyThreads.h"
-
-PartyThreads::Pool pt;
-
-void init(std::promise<void>& aPromise)
-{
-    auto lambda = [] (const int i)
-    {
-        std::cout << "Hello, " << i << std::endl;
-    };
-    pt.push(lambda, 1);
-    aPromise.set_value();
-}
-
-int main()
-{
-    std::promise<void> aPromise;
-    auto async = std::async(std::launch::async, init, std::ref(aPromise));
-    aPromise.get_future().get();
-    async.get();
-    pt.stop();
-    return 0;
-}
+int sizePartyThreadsLibrary();
+int stopPartyThreadsLibrary();

@@ -1,5 +1,5 @@
 /*
-*  PartyThreadsTest.cpp
+ *  PartyThreadsTest.cpp
  *  PartyThreads
  *
  *  Copyright (c) 2019 Salvatore Rivieccio. All rights reserved.
@@ -24,7 +24,7 @@
  */
 
 #include <gtest/gtest.h>
-#include "PartyThreads.h"
+#include "../include/PartyThreads.h"
 
 TEST(PartyThreadsTest, Init)
 {

@@ -1,5 +1,5 @@
 /*
- *  PartyThreadsExample.cpp
+ *  PartyThreadsLibraryTest.cpp
  *  PartyThreads
  *
  *  Copyright (c) 2019 Salvatore Rivieccio. All rights reserved.
@@ -23,27 +23,10 @@
  * THE SOFTWARE.
  */
 
-#include <iostream>
-#include "../include/PartyThreads.h"
+#include <gtest/gtest.h>
+#include "AsLibrary/PartyThreadsLibrary.h"
 
-PartyThreads::Pool pt;
-
-void init(std::promise<void>& aPromise)
+TEST(PartyThreadsLibraryTest, Size)
 {
-    auto lambda = [] (const int i)
-    {
-        std::cout << "Hello, " << i << std::endl;
-    };
-    pt.push(lambda, 1);
-    aPromise.set_value();
-}
-
-int main()
-{
-    std::promise<void> aPromise;
-    auto async = std::async(std::launch::async, init, std::ref(aPromise));
-    aPromise.get_future().get();
-    async.get();
-    pt.stop();
-    return 0;
+    ASSERT_GE(sizePartyThreadsLibrary(), 0);
 }
