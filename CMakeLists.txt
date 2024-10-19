@@ -4,12 +4,12 @@ project(PartyThread)
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include)
-add_executable(PartyThread examples/PartyThreadsExample.cpp)
+add_executable(PartyThreadsExample examples/PartyThreadsExample.cpp)
 
 #
 #   Google Test
 #
-set(UNIT_TEST UnitTest)
+set(UNIT_TEST PartyThreadsUnitTest)
 add_executable(${UNIT_TEST} ${CMAKE_CURRENT_SOURCE_DIR}/tests/PartyThreadsTest.cpp)
 
 include(FetchContent)
