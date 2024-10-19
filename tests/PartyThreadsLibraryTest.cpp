@@ -30,3 +30,8 @@ TEST(PartyThreadsLibraryTest, Size)
 {
     ASSERT_GE(sizePartyThreadsLibrary(), 0);
 }
+
+TEST(PartyThreadsLibraryTest, Stop)
+{
+    ASSERT_EQ(stopPartyThreadsLibrary(), 0);
+}

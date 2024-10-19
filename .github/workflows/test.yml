@@ -25,3 +25,4 @@ jobs:
             cd build
             cmake ..
             cmake --build . --target RunTest
+            cmake --build . --target RunTestAsLibrary
