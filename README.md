@@ -49,30 +49,12 @@ To use PartyThread in your project, include the `PartyThreads.h` header file:
 
 ### Example
 
-Here is a simple example of how to use the PartyThread library:
+There is an example program in the `examples` directory that demonstrates how to use the PartyThread library. 
+You can build and run the example program using the following commands (For example, on Linux):
 
-```cpp
-#include <iostream>
-#include "PartyThreads.h"
-
-PartyThreads::Pool pt;
-
-void init()
-{
-    auto lambda = [] (const int i)
-    {
-        std::cout << "Hello, " << i << std::endl;
-    };
-    pt.push(lambda, 1);
-}
-
-int main()
-{
-    auto future = std::async(std::launch::async, init);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    pt.stop();
-    return 0;
-}
+```sh
+cmake --build . --target PartyThreadsExample
+./PartyThreadsExample
 ```
 
 ### Running Unit Tests
