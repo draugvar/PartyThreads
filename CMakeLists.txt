@@ -3,7 +3,7 @@ project(PartyThread)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(PartyThreadsExample examples/PartyThreadsExample.cpp include/PartyThreads.h)
+add_executable(PartyThreadsExample examples/PartyThreadsExample.cpp)
 
 #
 #   Google Test
@@ -30,7 +30,7 @@ endif()
 #   Unit Test
 #
 set(UNIT_TEST PartyThreadsUnitTest)
-add_executable(${UNIT_TEST} tests/PartyThreadsTest.cpp include/PartyThreads.h)
+add_executable(${UNIT_TEST} tests/PartyThreadsTest.cpp)
 
 target_link_libraries(${UNIT_TEST}
         PRIVATE
@@ -48,14 +48,10 @@ add_custom_target(RunTest
 #
 #   Unit Test as library
 #
-
-add_library(${UNIT_TEST}Lib STATIC 
-        tests/AsLibrary/PartyThreadsLibrary.cpp
-        tests/AsLibrary/PartyThreadsLibrary.h
-        include/PartyThreads.h)
+add_library(${UNIT_TEST}Lib STATIC tests/AsLibrary/PartyThreadsLibrary.cpp)
 
 set(UNIT_TEST_LIBRARY PartyThreadsUnitTestLibrary)
-add_executable(${UNIT_TEST_LIBRARY} tests/PartyThreadsLibraryTest.cpp tests/AsLibrary/PartyThreadsLibrary.h)
+add_executable(${UNIT_TEST_LIBRARY} tests/PartyThreadsLibraryTest.cpp)
 
 target_link_libraries(${UNIT_TEST_LIBRARY}
         PRIVATE
