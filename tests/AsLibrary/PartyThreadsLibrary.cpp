@@ -25,7 +25,7 @@
 #include "PartyThreadsLibrary.h"
 #include "../../include/PartyThreads.h"
 
-PartyThreads::Pool pt;
+static PartyThreads::Pool pt;
 
 int sizePartyThreadsLibrary()
 {
