@@ -1,0 +1,29 @@
+name: Test CI
+
+# make a test on demand
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      # To use this repository
+      - name: Checkout
+        uses: actions/checkout@main
+
+      # Unit test through bash/cmake
+      - name: Unit test
+        shell: bash
+        run: |
+            mkdir build
+            cd build
+            cmake ..
+            cmake --build .
+            chmod +x ./UnitTest
+            ./UnitTest
