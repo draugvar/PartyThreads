@@ -48,7 +48,7 @@ add_custom_target(RunTest
 #
 #   Unit Test as library
 #
-add_library(${UNIT_TEST}Lib STATIC tests/AsLibrary/PartyThreadsLibrary.cpp)
+add_library(${UNIT_TEST}Lib SHARED tests/AsLibrary/PartyThreadsLibrary.cpp)
 
 set(UNIT_TEST_LIBRARY PartyThreadsUnitTestLibrary)
 add_executable(${UNIT_TEST_LIBRARY} tests/PartyThreadsLibraryTest.cpp)
