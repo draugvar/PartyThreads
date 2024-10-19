@@ -34,3 +34,13 @@ target_link_libraries(${UNIT_TEST}
         PRIVATE
         gtest
         gtest_main)
+
+
+# Add a custom target that runs the test application
+# BEWARE: it fails if the test fails
+add_custom_target(RunTest
+        COMMAND ${UNIT_TEST}
+        DEPENDS ${UNIT_TEST}
+        WORKING_DIRECTORY ${QX_RUNTIME_OUTDIR}
+        COMMENT "Running test application..."
+        VERBATIM)

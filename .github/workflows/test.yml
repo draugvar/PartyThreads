@@ -24,6 +24,4 @@ jobs:
             mkdir build
             cd build
             cmake ..
-            cmake --build .
-            chmod +x ./UnitTest*
-            ./UnitTest*
+            cmake --build . --target RunTest
