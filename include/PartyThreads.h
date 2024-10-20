@@ -240,7 +240,6 @@ namespace PartyThreads
 					}
 					// Execute the function
 					if (func) (*func)();
-					
 				}
 			});
 		}
