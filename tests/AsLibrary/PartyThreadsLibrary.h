@@ -22,7 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#pragma once 
+#pragma once
 
-int sizePartyThreadsLibrary();
-int stopPartyThreadsLibrary();
+#ifdef _WIN32
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+
+EXPORT int sizePartyThreadsLibrary();
+EXPORT int stopPartyThreadsLibrary();
