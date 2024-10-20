@@ -111,3 +111,47 @@ TEST(PartyThreadsTest, MultipleThreadsStop)
     ASSERT_EQ(future2.get(), 2);
     pt.stop(true);
 }
+
+TEST( PartyThreadsTest, MultipleThreadsStopNoWait )
+{
+    PartyThreads::Pool pt{3};
+    auto lambda = [] (const int i)
+    {
+        std::cout << "Hello, " << i << std::endl;
+        return i;
+    };
+    
+    auto future1 = pt.push(lambda, 1);
+    auto future2 = pt.push(lambda, 2);
+    ASSERT_EQ(future1.get(), 1);
+    ASSERT_EQ(future2.get(), 2);
+    pt.stop(false);
+}
+
+TEST(PartyThreadsTest, LongTimeExcutionMultipleThreads)
+{
+    PartyThreads::Pool pt{10};
+    bool stop = false;
+    auto lambda = [] (const int i, const bool &s)
+    {
+        while (!s)
+        {
+            std::cout << "Hello, " << i << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        return 0;
+    };
+
+    std::vector<std::future<int>> futures;
+    futures.reserve(10);
+    for( int i = 0; i < 10; ++i)
+    {
+        futures.emplace_back(pt.push(lambda, i, std::ref(stop)));
+    }
+    stop = true;
+    for( auto &f : futures)
+    {
+        ASSERT_EQ(f.get(), 0);
+    }
+    pt.stop(true);
+}

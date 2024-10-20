@@ -159,11 +159,15 @@ namespace PartyThreads
 			}
 			if (aWait)
 			{
-				for (auto & thread : this->mThreads)
+				// wait for the threads to finish
+				for (auto & [ thread, promise ] : this->mThreads)
 				{
-					if (thread.joinable())
-						thread.join();  // wait for the threads to finish
+					// Check if the thread has started
+					promise.get_future().get();
+					// Wait for the thread to finish
+					thread.wait();
 				}
+				// clear the threads
 				this->mThreads.clear();
 			}
 			
@@ -211,15 +215,14 @@ namespace PartyThreads
 		 */
 		void setThread(const int aIndex)
 		{
-			// A promise to set the thread ready
-			std::promise<bool> threadReady;
-
-			// Start the thread
-			this->mThreads[aIndex] = std::thread([this, &threadReady]
+			// The promise is used to signal the thread has started
+			this->mThreads[aIndex].second = std::promise<void>();
+			// Threads are started with a lambda function
+			this->mThreads[aIndex].first = std::async([this, aIndex]
 			{
+				// Signal the thread has started
+				this->mThreads[aIndex].second.set_value();
 				std::function<void()>* func = nullptr;
-				// Set the thread ready
-				threadReady.set_value(true);
 				while (!this->mStopping.test())
 				{
 					// Pop the function from the queue
@@ -228,18 +231,18 @@ namespace PartyThreads
 						// If there is nothing in the queue, wait
 						std::unique_lock lock(this->mMutex);
 						++this->mWaiting;
-						this->mCv.wait(lock);
+						this->mCv.wait(lock, [this, &func]
+						{
+							// Check if the thread should stop or if there is a function in the queue
+							return this->mStopping.test() || this->mQueue.pop(func);
+						});
 						--this->mWaiting;
 					}
-					else
-					{
-						// Execute the function
-						(*func)();
-					}
-				}	
+					// Execute the function
+					if (func) (*func)();
+					
+				}
 			});
-			// wait for the thread to be ready
-			threadReady.get_future().wait();
 		}
 
 		/**
@@ -248,7 +251,7 @@ namespace PartyThreads
 		void init() { this->mWaiting = 0; }
 
 		// threads
-		std::vector<std::thread> mThreads;
+		std::vector<std::pair<std::future<void>, std::promise<void>>> mThreads;
 		std::atomic_flag mStopping;
 		
 		// the task queue
